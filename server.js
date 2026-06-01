@@ -192,8 +192,7 @@ async function sendWelcomeMenu(psid) {
             type: "web_url",
             url: `${SERVER_URL}/formulaire`,
             title: "🔫 Commander un tapis",
-            webview_height_ratio: "full",
-            messenger_extensions: true
+            webview_height_ratio: "full"
           },
           {
             type: "postback",
@@ -247,8 +246,7 @@ async function sendWebviewButton(psid) {
             type: "web_url",
             url: `${SERVER_URL}/formulaire`,
             title: "📐 Ouvrir le formulaire",
-            webview_height_ratio: "full",
-            messenger_extensions: true
+            webview_height_ratio: "full"
           }
         ]
       }
@@ -367,8 +365,7 @@ app.get('/setup', async (req, res) => {
                 type: "web_url",
                 title: "🔫 Commander un tapis",
                 url: `${SERVER_URL}/formulaire`,
-                webview_height_ratio: "full",
-                messenger_extensions: true
+                webview_height_ratio: "full"
               },
               {
                 type: "postback",
