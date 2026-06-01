@@ -399,6 +399,13 @@ app.get('/setup', async (req, res) => {
   }
 });
 
+// ════════════════════════════════════════════════════════════
+//  ROUTE — Politique de confidentialité
+// ════════════════════════════════════════════════════════════
+app.get('/privacy', (req, res) => {
+  res.sendFile(__dirname + '/public/privacy.html');
+});
+
 // ─── Health check ────────────────────────────────────────────
 app.get('/', (req, res) => {
   res.send('🔫 TUFTOLOGY Bot — En ligne ✅');
