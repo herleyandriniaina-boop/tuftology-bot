@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TUFTOLOGY — Tapis sur mesure</title>
+<script src="//connect.facebook.net/en_US/messenger.Extensions.js"
+  onload="extReady()"
+  onerror="console.warn('Extensions non dispo (hors Messenger)')">
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --forest:    #1E3A2F;
+  --forest-dk: #152B23;
+  --forest-lt: #2C5440;
+  --gold:      #D4A017;
+  --gold-lt:   #F0C040;
+  --cream:     #FAF8F4;
+  --white:     #FFFFFF;
+  --surface:   #F4F1EC;
+  --border:    #DDD8CE;
+  --muted:     #8A857C;
+  --text:      #1A1714;
+  --blue:      #1877F2;
+  --green-bg:  #F0FFF4;
+  --green-bd:  #C6F6D5;
+  --warn-bg:   #FEF9E7;
+  --warn-bd:   #F7CA3A;
+  --danger:    #C0392B;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--surface);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--forest);
+  padding: 14px 18px 13px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  position: sticky; top: 0; z-index: 20;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+}
+.header-logo {
+  width: 42px; height: 42px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(212,160,23,0.4);
+}
+.header-info { flex: 1; }
+.header-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px; font-weight: 800;
+  color: var(--white); letter-spacing: 1px;
+}
+.header-sub { font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 1px; }
+
+/* ── PAGE WRAPPER ── */
+.page { padding: 14px 14px 6px; max-width: 500px; margin: 0 auto; }
+
+/* ── CARD ── */
+.card {
+  background: var(--white);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+/* ── CARD HEADER ── */
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700;
+  padding: 16px 18px 3px;
+  color: var(--text);
+}
+.card-subtitle {
+  font-size: 12.5px; color: var(--muted);
+  padding: 0 18px 14px;
+  border-bottom: 1px solid var(--surface);
+}
+
+/* ── FIELD ── */
+.field { padding: 13px 18px; border-bottom: 1px solid var(--surface); }
+.field:last-child { border-bottom: none; }
+.field-label {
+  font-size: 11.5px; font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 9px;
+  display: flex; align-items: center; gap: 6px;
+}
+.field input, .field textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  background: var(--cream);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  -webkit-appearance: none;
+}
+.field input:focus, .field textarea:focus {
+  border-color: var(--forest);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(30,58,47,0.1);
+}
+.field input::placeholder { color: #BCC0C4; }
+
+/* ── Phone prefix ── */
+.phone-wrap { display: flex; gap: 8px; align-items: stretch; }
+.phone-prefix {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  padding: 11px 13px;
+  font-size: 14px; font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  display: flex; align-items: center;
+}
+.phone-wrap input { flex: 1; }
+
+/* ── Dimension hint ── */
+.dim-hint {
+  font-size: 11.5px; color: var(--muted);
+  margin-top: 7px;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* ── Upload ── */
+.upload-box {
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 22px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+  background: var(--cream);
+}
+.upload-box:hover { border-color: var(--forest); background: #F4FAF6; }
+.upload-box:active { background: var(--surface); }
+.upload-box input[type=file] {
+  position: absolute; inset: 0; opacity: 0;
+  cursor: pointer; width: 100%; height: 100%;
+}
+.upload-icon { font-size: 34px; margin-bottom: 7px; }
+.upload-text { font-size: 13px; color: var(--muted); }
+.upload-text strong { color: var(--forest); }
+.upload-preview {
+  width: 100%; max-height: 160px;
+  object-fit: cover; border-radius: 8px;
+  display: none; margin-top: 10px;
+}
+.upload-filename {
+  font-size: 12px; color: var(--forest);
+  margin-top: 6px; display: none;
+  font-weight: 600;
+}
+
+/* ── LIVE DEVIS BOX ── */
+.devis-box {
+  margin: 0 14px 12px;
+  max-width: 500px;
+  margin-left: auto; margin-right: auto;
+  background: var(--white);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+.devis-header {
+  background: var(--forest);
+  padding: 11px 16px;
+  display: flex; align-items: center; gap: 9px;
+}
+.devis-header-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #4CAF50;
+  animation: pulse 1.4s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+.devis-header-text {
+  font-size: 12px; font-weight: 700;
+  color: rgba(255,255,255,0.9); letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.devis-empty {
+  padding: 22px 18px;
+  text-align: center;
+  font-size: 13px; color: var(--muted);
+  font-style: italic;
+}
+.devis-rows { padding: 4px 0; }
+.devis-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 18px;
+  font-size: 13.5px;
+  border-bottom: 1px solid var(--surface);
+}
+.devis-row:last-child { border-bottom: none; }
+.devis-row-label { color: var(--muted); flex: 1; font-size: 12.5px; }
+.devis-row-val { font-weight: 700; color: var(--text); font-size: 13px; }
+.devis-total {
+  background: var(--forest);
+  padding: 13px 18px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.devis-total-label { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.8); }
+.devis-total-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 800; color: var(--gold-lt);
+}
+.devis-delai {
+  padding: 10px 18px;
+  background: var(--green-bg);
+  font-size: 12px; color: var(--forest-lt);
+  font-weight: 600;
+  border-top: 1px solid var(--green-bd);
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* ── SUBMIT BUTTON ── */
+.btn-wrap {
+  padding: 0 14px 14px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.btn-submit {
+  width: 100%;
+  padding: 15px;
+  background: var(--forest);
+  color: var(--white);
+  border: none; border-radius: 10px;
+  font-size: 16px; font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 14px rgba(30,58,47,0.3);
+}
+.btn-submit:not(:disabled):hover { background: var(--forest-lt); }
+.btn-submit:active { background: var(--forest-dk); transform: scale(0.99); }
+.btn-submit:disabled { background: #C4C9CC; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ── LOADING SCREEN ── */
+#screen-loading { display: none; padding: 14px; max-width: 500px; margin: 0 auto; }
+.loading-card {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 36px 24px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.loading-spinner {
+  width: 56px; height: 56px;
+  border: 5px solid var(--surface);
+  border-top-color: var(--forest);
+  border-radius: 50%;
+  margin: 0 auto 22px;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700;
+  color: var(--text); margin-bottom: 6px;
+}
+.loading-sub { font-size: 13px; color: var(--muted); margin-bottom: 26px; }
+.progress-track {
+  width: 100%; height: 6px;
+  background: var(--surface); border-radius: 99px;
+  overflow: hidden; margin-bottom: 12px;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--forest), #4A9066);
+  border-radius: 99px;
+  width: 0%; transition: width 0.5s ease;
+}
+.progress-step { font-size: 12.5px; color: var(--muted); font-style: italic; }
+
+/* ── SUCCESS SCREEN ── */
+#screen-success { display: none; padding: 14px; max-width: 500px; margin: 0 auto; }
+
+.success-top {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 26px 18px 20px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  margin-bottom: 12px;
+}
+.success-icon {
+  width: 66px; height: 66px;
+  background: var(--forest);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; margin: 0 auto 14px;
+  animation: popIn 0.55s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 4px 16px rgba(30,58,47,0.3);
+}
+@keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+.success-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 21px; font-weight: 800; color: var(--text); margin-bottom: 6px;
+}
+.success-sub { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+/* Acompte */
+.acompte-card {
+  background: var(--forest);
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 20px rgba(30,58,47,0.3);
+}
+.ac-badge {
+  display: inline-block;
+  background: rgba(212,160,23,0.2);
+  border: 1px solid rgba(212,160,23,0.45);
+  border-radius: 99px;
+  padding: 3px 11px;
+  font-size: 11px; font-weight: 700;
+  color: var(--gold-lt);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.ac-amount {
+  font-family: 'Playfair Display', serif;
+  font-size: 40px; font-weight: 800;
+  color: var(--gold-lt); line-height: 1;
+  margin-bottom: 4px;
+}
+.ac-detail { font-size: 12px; color: rgba(255,255,255,0.45); margin-bottom: 18px; }
+.timer-box {
+  background: var(--danger);
+  border-radius: 10px;
+  padding: 13px 15px;
+  display: flex; align-items: center; gap: 10px;
+}
+.timer-emoji { font-size: 20px; }
+.timer-label { flex: 1; font-size: 13px; color: rgba(255,255,255,0.9); font-weight: 500; }
+.timer-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px; font-weight: 800;
+  color: #FFD0CC; min-width: 56px; text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Alert */
+.alert-box {
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-bd);
+  border-left: 4px solid #E6A817;
+  border-radius: 10px;
+  padding: 13px 15px;
+  font-size: 13px; color: #7A5A04;
+  margin-bottom: 12px;
+  line-height: 1.55;
+}
+
+/* Délai banner */
+.delai-box {
+  display: none;
+  background: var(--green-bg);
+  border: 1px solid var(--green-bd);
+  border-radius: 10px;
+  padding: 13px 15px;
+  font-size: 13px; color: var(--forest);
+  margin-bottom: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.delai-box.show { display: block; }
+
+/* Payment card */
+.pay-card {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  margin-bottom: 12px;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+.pay-card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 14px; }
+.pay-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.pay-option {
+  background: var(--surface);
+  border: 2px solid transparent;
+  border-radius: 11px;
+  padding: 13px 6px 11px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.pay-option:active { transform: scale(0.97); }
+.pay-option.selected {
+  border-color: var(--forest);
+  background: var(--green-bg);
+}
+.pay-option-emoji { font-size: 28px; display: block; margin-bottom: 5px; }
+.pay-option-name { font-size: 12px; font-weight: 700; color: var(--text); }
+.pay-option-sub { font-size: 10px; color: var(--muted); }
+
+.pay-number-reveal {
+  display: none;
+  background: var(--surface);
+  border-radius: 11px;
+  padding: 15px;
+  margin-bottom: 14px;
+  animation: slideDown 0.25s ease;
+}
+@keyframes slideDown { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+.pay-number-reveal.show { display: block; }
+.pnr-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 5px; }
+.pnr-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px; font-weight: 800; color: var(--text); letter-spacing: 1px;
+}
+.pnr-name { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+.btn-copy {
+  width: 100%;
+  padding: 14px;
+  background: var(--blue);
+  color: var(--white);
+  border: none; border-radius: 10px;
+  font-size: 15px; font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  box-shadow: 0 4px 12px rgba(24,119,242,0.3);
+}
+.btn-copy:active { background: #1464D8; transform: scale(0.99); }
+
+/* screen show/hide */
+.screen { display: none; }
+.screen.active { display: block; }
+#screen-form.active { display: block; }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="header-logo">🔫</div>
+  <div class="header-info">
+    <div class="header-name">TUFTOLOGY</div>
+    <div class="header-sub">Tapis sur mesure · Antananarivo 🇲🇬</div>
+  </div>
+</div>
+
+<!-- ══════════════ SCREEN FORM ══════════════ -->
+<div id="screen-form" class="screen active">
+  <div class="page">
+
+    <!-- Info client -->
+    <div class="card">
+      <div class="card-title">Devis personnalisé</div>
+      <div class="card-subtitle">Remplissez le formulaire — le prix s'affiche automatiquement</div>
+
+      <div class="field">
+        <div class="field-label">👤 Nom complet</div>
+        <input type="text" id="nom" placeholder="Votre nom complet" autocomplete="name" />
+      </div>
+
+      <div class="field">
+        <div class="field-label">📱 Numéro de téléphone</div>
+        <div class="phone-wrap">
+          <div class="phone-prefix">🇲🇬 +261</div>
+          <input type="tel" id="tel" placeholder="034 xx xxx xx" />
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">📐 Dimensions souhaitées</div>
+        <input type="text" id="dim"
+          placeholder="Ex : 2x3 ou 200x300 ou 120 diamètre"
+          autocomplete="off"
+          oninput="onDimInput(this.value)"
+        />
+        <div class="dim-hint">
+          Écrivez comme vous voulez : 2x3 · 200x300 · 2m×3m · 120 diamètre · 1.5×2.5
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">🖼️ Votre design / inspiration</div>
+        <div class="upload-box" id="upload-box">
+          <input type="file" id="img-file" accept="image/*" onchange="previewImg(this)" />
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">Appuyez pour <strong>choisir une image</strong><br>JPG · PNG · WEBP</div>
+          <img class="upload-preview" id="img-prev" alt="Preview" />
+          <div class="upload-filename" id="img-fname"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page -->
+
+  <!-- LIVE DEVIS -->
+  <div class="devis-box" id="devis-box">
+    <div class="devis-header">
+      <div class="devis-header-dot"></div>
+      <div class="devis-header-text">Calcul en temps réel</div>
+    </div>
+    <div id="devis-content">
+      <div class="devis-empty">
+        Entrez vos dimensions pour voir le calcul apparaître ici ✨
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-wrap">
+    <button class="btn-submit" id="btn-submit" disabled onclick="doSubmit()">
+      Soumettre ma commande →
+    </button>
+  </div>
+
+</div><!-- /screen-form -->
+
+<!-- ══════════════ SCREEN LOADING ══════════════ -->
+<div id="screen-loading">
+  <div class="loading-card">
+    <div class="loading-spinner"></div>
+    <div class="loading-title">Traitement en cours…</div>
+    <div class="loading-sub">Nous préparons votre devis TUFTOLOGY</div>
+    <div class="progress-track">
+      <div class="progress-bar" id="prog-bar"></div>
+    </div>
+    <div class="progress-step" id="prog-step">Vérification des dimensions…</div>
+  </div>
+</div>
+
+<!-- ══════════════ SCREEN SUCCESS ══════════════ -->
+<div id="screen-success">
+  <div class="page">
+
+    <div class="success-top">
+      <div class="success-icon">✓</div>
+      <div class="success-title">Commande envoyée !</div>
+      <div class="success-sub">Merci <strong id="s-name"></strong>, votre commande a bien été reçue par TUFTOLOGY.</div>
+    </div>
+
+    <div class="acompte-card">
+      <div class="ac-badge">Acompte 50 %</div>
+      <div class="ac-amount" id="s-acompte">0 Ar</div>
+      <div class="ac-detail" id="s-detail">sur un total estimé de 0 Ar</div>
+      <div class="timer-box">
+        <div class="timer-emoji">⏱️</div>
+        <div class="timer-label">Paiement à effectuer dans</div>
+        <div class="timer-val" id="s-timer">15:00</div>
+      </div>
+    </div>
+
+    <div class="alert-box">
+      ⚠️ Ce devis est valable <strong>15 minutes</strong>. Passé ce délai, votre commande sera annulée. Effectuez votre paiement maintenant pour confirmer.
+    </div>
+
+    <div class="delai-box" id="s-delai">
+      📅 Délai de fabrication : <strong>14 jours ouvrables</strong><br>
+      <span style="font-size:11px;color:#2C5440">Fabrication · Encollage · Finition · Packaging</span>
+    </div>
+
+    <div class="pay-card">
+      <div class="pay-card-title">💳 Payer par Mobile Money</div>
+      <div class="pay-options">
+        <div class="pay-option" onclick="pickPay('orange',this)">
+          <span class="pay-option-emoji">🟠</span>
+          <div class="pay-option-name">Orange</div>
+          <div class="pay-option-sub">Money</div>
+        </div>
+        <div class="pay-option" onclick="pickPay('airtel',this)">
+          <span class="pay-option-emoji">🔴</span>
+          <div class="pay-option-name">Airtel</div>
+          <div class="pay-option-sub">Money</div>
+        </div>
+        <div class="pay-option" onclick="pickPay('telma',this)">
+          <span class="pay-option-emoji">🔵</span>
+          <div class="pay-option-name">MVola</div>
+          <div class="pay-option-sub">Telma</div>
+        </div>
+      </div>
+
+      <div class="pay-number-reveal" id="pay-reveal">
+        <div class="pnr-label" id="pay-op-label">Numéro à créditer :</div>
+        <div class="pnr-number">033 96 400 40</div>
+        <div class="pnr-name">Compte : <strong>TUFTOLOGY — Say Kim Herley</strong></div>
+      </div>
+
+      <button class="btn-copy" onclick="copyNumber()">📋 Copier le numéro</button>
+    </div>
+
+  </div>
+</div><!-- /screen-success -->
+
+<script>
+// ─── PRIX (Ar) ───────────────────────────────────────────────
+const PRIX = {
+  toile:        25000,  // Ar / mètre linéaire
+  antiderapant: 25000,  // Ar / mètre linéaire
+  colle_kg:     45000,  // Ar / kg  (0.5 kg par m²)
+  fil_100g:     12000,  // Ar / 100g (300g par m²)
+  elec:         60000,  // si surface > 6 m²
+};
+
+let totalDevis = 0;
+let timerID    = null;
+let dimTimer   = null;
+
+// ─── DIMENSION INPUT (debounced) ─────────────────────────────
+function onDimInput(val) {
+  clearTimeout(dimTimer);
+  dimTimer = setTimeout(() => parseDim(val), 350);
+}
+
+// ─── PARSER DIMENSIONS LIBRES ────────────────────────────────
+function parseDim(txt) {
+  txt = txt.trim().toLowerCase();
+  if (!txt) {
+    document.getElementById('devis-content').innerHTML =
+      '<div class="devis-empty">Entrez vos dimensions pour voir le calcul apparaître ici ✨</div>';
+    totalDevis = 0; checkReady(); return;
+  }
+
+  // Diamètre (cercle)
+  const diamMatch = txt.match(/(\d+[\.,]?\d*)\s*(?:cm|m)?\s*(?:diam[eè]tre|diam|ø|d)/i)
+    || txt.match(/(?:diam[eè]tre|diam|ø)\s*:?\s*(\d+[\.,]?\d*)/i);
+  if (diamMatch) {
+    let d = parseFloat(diamMatch[1].replace(',', '.'));
+    if (d > 20) d = d / 100;
+    const r       = d / 2;
+    const surface = Math.PI * r * r;
+    const perim   = Math.PI * d;
+    calcFromValues(surface, perim, d, d, true);
+    return;
+  }
+
+  // Format LxL (toutes variantes)
+  const sepMatch = txt.match(/(\d+[\.,]?\d*)\s*(?:m|cm)?\s*[x×*,;]\s*(\d+[\.,]?\d*)\s*(?:m|cm)?/i);
+  if (sepMatch) {
+    let a = parseFloat(sepMatch[1].replace(',', '.'));
+    let b = parseFloat(sepMatch[2].replace(',', '.'));
+    const hasCm = txt.includes('cm');
+    if (hasCm || (a > 20 && b > 20)) { a /= 100; b /= 100; }
+    calcFromValues(a * b, (a + b) * 2, a, b, false);
+    return;
+  }
+
+  // Deux nombres séparés par espace
+  const spaceMatch = txt.match(/(\d+[\.,]?\d*)\s+(\d+[\.,]?\d*)/);
+  if (spaceMatch) {
+    let a = parseFloat(spaceMatch[1].replace(',', '.'));
+    let b = parseFloat(spaceMatch[2].replace(',', '.'));
+    if (a > 20 && b > 20) { a /= 100; b /= 100; }
+    calcFromValues(a * b, (a + b) * 2, a, b, false);
+    return;
+  }
+
+  // Rien trouvé
+  document.getElementById('devis-content').innerHTML =
+    '<div class="devis-empty">Format non reconnu — essayez : 2x3 ou 200x300 ou 120 diamètre ✨</div>';
+  totalDevis = 0; checkReady();
+}
+
+function calcFromValues(surface, perim, a, b, isDiam) {
+  if (!surface || surface <= 0) return;
+
+  const cToile = perim  * PRIX.toile;
+  const cAnti  = perim  * PRIX.antiderapant;
+  const cColle = surface * 0.5 * PRIX.colle_kg;
+  const cFil   = surface * 3   * (PRIX.fil_100g / 100);
+  const grand  = surface >= 6;
+  const cElec  = grand ? PRIX.elec : 0;
+  totalDevis   = Math.round(cToile + cAnti + cColle + cFil + cElec);
+
+  const f        = n => Math.round(n).toLocaleString('fr-MG') + ' Ar';
+  const dimLabel = isDiam
+    ? `⌀ ${(a * 100).toFixed(0)} cm — surface ${surface.toFixed(2)} m²`
+    : `${a.toFixed(2)} m × ${b.toFixed(2)} m = ${surface.toFixed(2)} m²`;
+  const delai = grand ? '14 jours ouvrables' : '7 jours ouvrables';
+
+  document.getElementById('devis-content').innerHTML = `
+    <div class="devis-rows">
+      <div class="devis-row">
+        <span class="devis-row-label">📏 Toile primaire (${perim.toFixed(1)} ml)</span>
+        <span class="devis-row-val">${f(cToile)}</span>
+      </div>
+      <div class="devis-row">
+        <span class="devis-row-label">🛡️ Dos antidérapant (${perim.toFixed(1)} ml)</span>
+        <span class="devis-row-val">${f(cAnti)}</span>
+      </div>
+      <div class="devis-row">
+        <span class="devis-row-label">🪣 Colle moquette (~${(surface*0.5).toFixed(2)} kg)</span>
+        <span class="devis-row-val">${f(cColle)}</span>
+      </div>
+      <div class="devis-row">
+        <span class="devis-row-label">🧶 Fil laine acrylique (~${(surface*300).toFixed(0)} g)</span>
+        <span class="devis-row-val">${f(cFil)}</span>
+      </div>
+      ${grand ? `
+      <div class="devis-row">
+        <span class="devis-row-label">⚡ Électricité (grand format)</span>
+        <span class="devis-row-val">${f(cElec)}</span>
+      </div>` : ''}
+    </div>
+    <div class="devis-total">
+      <span class="devis-total-label">TOTAL ESTIMÉ</span>
+      <span class="devis-total-val">${f(totalDevis)}</span>
+    </div>
+    <div class="devis-delai">📅 Délai estimé : <strong>${delai}</strong> · ${dimLabel}</div>
+  `;
+  checkReady();
+}
+
+// ─── READY CHECK ─────────────────────────────────────────────
+function checkReady() {
+  const ok = document.getElementById('nom').value.trim() &&
+             document.getElementById('tel').value.trim() &&
+             totalDevis > 0;
+  document.getElementById('btn-submit').disabled = !ok;
+}
+['nom','tel'].forEach(id =>
+  document.getElementById(id).addEventListener('input', checkReady)
+);
+
+// ─── IMAGE PREVIEW ───────────────────────────────────────────
+function previewImg(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('img-prev');
+    prev.src = e.target.result;
+    prev.style.display = 'block';
+    const fn = document.getElementById('img-fname');
+    fn.textContent = '✓ ' + file.name;
+    fn.style.display = 'block';
+    document.querySelector('.upload-icon').style.display = 'none';
+    document.querySelector('.upload-text').style.display  = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+// ─── MESSENGER PSID ──────────────────────────────────────────
+let messengerPSID = null;
+function extReady() {
+  MessengerExtensions.getContext('VOTRE_APP_ID', function(ctx) {
+    messengerPSID = ctx.psid;
+  }, function(err) { console.warn('Ctx err:', err); });
+}
+
+// ─── SUBMIT ──────────────────────────────────────────────────
+function doSubmit() {
+  document.getElementById('screen-form').style.display    = 'none';
+  document.getElementById('screen-loading').style.display = 'block';
+  runLoader();
+}
+
+// Appelé après le loader — envoie la commande à l'API
+async function sendCommandeToAPI() {
+  const nom  = document.getElementById('nom').value.trim();
+  const tel  = document.getElementById('tel').value.trim();
+  const dim  = document.getElementById('dim').value.trim();
+  const f    = n => Math.round(n).toLocaleString('fr-MG') + ' Ar';
+  const ac   = Math.round(totalDevis * 0.5);
+  try {
+    await fetch('/api/commande', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nom,
+        tel,
+        dimensions: dim,
+        total:    f(totalDevis),
+        acompte:  f(ac),
+        psid:     messengerPSID || null
+      })
+    });
+  } catch (e) { console.warn('API non dispo:', e); }
+}
+
+// ─── LOADER ──────────────────────────────────────────────────
+function runLoader() {
+  const bar  = document.getElementById('prog-bar');
+  const step = document.getElementById('prog-step');
+  const seq  = [
+    [0,   'Vérification de votre demande…'],
+    [20,  'Calcul des matériaux nécessaires…'],
+    [42,  'Estimation des coûts de production…'],
+    [64,  'Génération du devis TUFTOLOGY…'],
+    [85,  'Finalisation de votre commande…'],
+    [100, 'Commande confirmée ✓'],
+  ];
+  let i = 0;
+  (function tick() {
+    if (i >= seq.length) { setTimeout(showSuccess, 350); return; }
+    bar.style.width  = seq[i][0] + '%';
+    step.textContent = seq[i][1];
+    i++;
+    setTimeout(tick, i === seq.length ? 300 : 900);
+  })();
+}
+
+// ─── SUCCESS ─────────────────────────────────────────────────
+function showSuccess() {
+  document.getElementById('screen-loading').style.display = 'none';
+  document.getElementById('screen-success').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  sendCommandeToAPI(); // 🔔 envoyer la commande à l'admin
+
+  const nom = document.getElementById('nom').value.trim();
+  const dim = document.getElementById('dim').value.trim();
+  const f   = n => Math.round(n).toLocaleString('fr-MG') + ' Ar';
+  const ac  = Math.round(totalDevis * 0.5);
+
+  document.getElementById('s-name').textContent    = nom;
+  document.getElementById('s-acompte').textContent = f(ac);
+  document.getElementById('s-detail').textContent  = 'sur un total estimé de ' + f(totalDevis);
+
+  parseDimForDelai(dim);
+  startTimer(15 * 60);
+}
+
+function parseDimForDelai(txt) {
+  let surface = 0;
+  const m = txt.match(/(\d+[\.,]?\d*)\s*(?:m|cm)?\s*[x×*,;]\s*(\d+[\.,]?\d*)/i);
+  if (m) {
+    let a = parseFloat(m[1].replace(',','.')), b = parseFloat(m[2].replace(',','.'));
+    if (a > 20 && b > 20) { a /= 100; b /= 100; }
+    surface = a * b;
+  }
+  if (surface >= 6) document.getElementById('s-delai').classList.add('show');
+}
+
+// ─── TIMER ───────────────────────────────────────────────────
+function startTimer(sec) {
+  if (timerID) clearInterval(timerID);
+  let rem = sec;
+  const el = document.getElementById('s-timer');
+  function tick() {
+    const m = String(Math.floor(rem / 60)).padStart(2,'0');
+    const s = String(rem % 60).padStart(2,'0');
+    el.textContent = m + ':' + s;
+    if (rem <= 0) { clearInterval(timerID); el.textContent = 'EXPIRÉ'; el.style.color = '#FFB3B3'; return; }
+    rem--;
+  }
+  tick();
+  timerID = setInterval(tick, 1000);
+}
+
+// ─── PAIEMENT ────────────────────────────────────────────────
+const opLabels = {
+  orange: 'Orange Money — Numéro à créditer :',
+  airtel: 'Airtel Money — Numéro à créditer :',
+  telma:  'MVola (Telma) — Numéro à créditer :',
+};
+function pickPay(op, el) {
+  document.querySelectorAll('.pay-option').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('pay-op-label').textContent = opLabels[op];
+  document.getElementById('pay-reveal').classList.add('show');
+}
+
+function copyNumber() {
+  navigator.clipboard.writeText('0339640040').then(() => {
+    const btn = document.querySelector('.btn-copy');
+    btn.textContent = '✓ Numéro copié !';
+    btn.style.background = '#1E3A2F';
+    setTimeout(() => {
+      btn.textContent = '📋 Copier le numéro';
+      btn.style.background = '#1877F2';
+    }, 2500);
+  }).catch(() => alert('Numéro : 033 96 400 40'));
+}
+</script>
+</body>
+</html>
